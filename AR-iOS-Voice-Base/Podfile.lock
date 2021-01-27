@@ -1,0 +1,20 @@
+PODS:
+  - ARtcKit_iOS (4.1.1.6)
+  - Masonry (1.1.0)
+
+DEPENDENCIES:
+  - ARtcKit_iOS
+  - Masonry
+
+SPEC REPOS:
+  trunk:
+    - ARtcKit_iOS
+    - Masonry
+
+SPEC CHECKSUMS:
+  ARtcKit_iOS: c1216972272d030d5c4ecc92d74c89055e27f5d3
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+
+PODFILE CHECKSUM: 11beec8bc4e3b8d8dbe0a9d1b5ab219707a1164b
+
+COCOAPODS: 1.9.3
