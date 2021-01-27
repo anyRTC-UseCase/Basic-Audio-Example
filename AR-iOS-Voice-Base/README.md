@@ -1,16 +1,16 @@
-# AR-Android-Voice-Base
+# AR-iOS-Voice-Base
 
 
 
-## AR-Android语音通话
+## AR-iOS语音通话
 
 #### 快速开始 🔜
 
-本示例包含了 RTC 4.0 SDK 以及集成 Demo
+本示例包含了 RTC 4.1.1.6 SDK 以及集成 Demo
 
 Demo演示了以下功能
 
-- 创建 RtcEngine 实例
+- 创建 ARtcEngine 实例
 - 加入频道
 - 与对方通话
 - 展示自己上下行和对方下行
@@ -23,12 +23,10 @@ Demo演示了以下功能
 
 1. 在[开发者后台](https://console.anyrtc.io/signin/)创建一个账号
 2. 左侧应用管理 -> 创建应用
-3. 复制 AppId 后填入 Demo 程序中，具体位置在**values/strings.xml**
+3. 复制 AppId 后填入 Demo 程序中，具体位置在**Main/RoomViewController.m**
 
 ```
-<resources>
-    <string name="ar_appid">YOUR APPID</string>
-</resources>
+#define APPID               @"your AppId"
 ```
 
 4. 开始运行即可
@@ -37,9 +35,9 @@ Demo演示了以下功能
 
 #### 集成SDK🔜
 
-你可以查看文档了解如何 [快速集成](https://docs.anyrtc.io/rtc-android/docs/quickstart)
+你可以查看文档了解如何 [快速集成](https://docs.anyrtc.io/rtc-ios/docs/ios/ios_rtc_guide)
 
-完整文档地址 👉 [API参考](https://docs.anyrtc.io/rtc-android/docs/android_overview)
+完整文档地址 👉 [API参考](https://docs.anyrtc.io/rtc-ios/docs/ios/ios_rtc_overview)
 
 
 
