@@ -5,7 +5,7 @@
 //  Created by anyRTC on 2021/1/25.
 //
 
-#define APPID               @"177e21c0d1641291c34e46e1198bd49a"
+#define APPID               @""
 
 
 #import "RoomViewController.h"
@@ -33,6 +33,14 @@
     [self initUI];
     [self.engineKit joinChannelByToken:@"" channelId:self.channelId uid:self.userId joinSuccess:nil];
 }
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [self.engineKit leaveChannel:nil];
+    self.engineKit.delegate = nil;
+    self.engineKit = nil;
+}
+
 
 - (NSMutableArray *)userList {
     if (!_userList) {
