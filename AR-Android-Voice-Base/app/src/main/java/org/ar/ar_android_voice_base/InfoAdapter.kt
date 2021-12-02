@@ -4,17 +4,9 @@ import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 
-class InfoAdapter: BaseQuickAdapter<InfoBean,BaseViewHolder>(R.layout.layout_info){
+class InfoAdapter: BaseQuickAdapter<Member,BaseViewHolder>(R.layout.layout_info){
 
-    override fun convert(holder: BaseViewHolder, item: InfoBean) {
+    override fun convert(holder: BaseViewHolder, item: Member) {
         holder.setText(R.id.userId,item.userId)
-        if (item.isSelf){
-            holder.setVisible(R.id.self, true)
-            holder.setText(R.id.txaudio, item.txAudio.toString()+"Kb/s")
-        }else{
-            holder.setVisible(R.id.self, false)
-            holder.setVisible(R.id.txaudio,false)
-        }
-        holder.setText(R.id.rxaudio,item.rxAudio.toString()+"Kb/s")
     }
 }

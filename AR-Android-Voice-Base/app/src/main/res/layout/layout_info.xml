@@ -13,15 +13,6 @@
         android:layout_centerVertical="true"
         android:textSize="@dimen/sp_14"/>
 
-    <TextView
-        android:id="@+id/self"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/userId"
-        android:layout_centerVertical="true"
-        android:textSize="@dimen/sp_14"
-        android:textColor="#FFFFFF"
-        android:text="(自己)" />
 
     <TextView
         android:id="@+id/txaudio"
@@ -31,6 +22,7 @@
         android:textColor="@color/up_text_color"
         android:textSize="@dimen/sp_11"
         android:layout_marginRight="@dimen/dp_10"
+        android:visibility="invisible"
         android:layout_centerVertical="true"
         android:drawableLeft="@drawable/up"/>
 
@@ -42,6 +34,7 @@
         android:layout_alignParentRight="true"
         android:textColor="@color/down_text_color"
         android:textSize="@dimen/sp_11"
+        android:visibility="invisible"
         android:layout_marginRight="@dimen/dp_20"
         android:drawableLeft="@drawable/down"/>
 

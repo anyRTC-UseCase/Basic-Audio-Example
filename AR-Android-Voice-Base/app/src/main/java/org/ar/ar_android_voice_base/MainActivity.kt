@@ -13,17 +13,22 @@ import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.runtime.Permission
 import org.ar.ar_android_voice_base.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() ,View.OnClickListener {
+class MainActivity : AppCompatActivity(){
 
-    private var viewBinding: ActivityMainBinding? = null
+    private val viewBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewBinding = ActivityMainBinding.inflate(LayoutInflater.from(this))
-        setContentView(viewBinding?.root)
-        viewBinding?.input?.addTextChangedListener(textWatcher)
-        viewBinding?.join?.setOnClickListener(this)
-        viewBinding?.join?.isEnabled =false
+        setContentView(viewBinding.root)
+        viewBinding.run {
+            input.addTextChangedListener(textWatcher)
+            join.isEnabled = false
+            join.setOnClickListener {
+                startActivity(Intent(this@MainActivity,VoiceActivity::class.java).apply {
+                    putExtra("channelId",viewBinding.input.text.toString())
+                })
+            }
+        }
         if (!AndPermission.hasPermissions(this, Permission.Group.STORAGE,
                 Permission.Group.MICROPHONE)){
             AndPermission.with(this).runtime().permission(
@@ -35,20 +40,12 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener {
 
     private var textWatcher:TextWatcher =object :TextWatcher{
         override fun afterTextChanged(p0: Editable?) {
-            viewBinding?.join?.isEnabled = p0?.toString()?.length!! > 0
+            p0?.let {
+                viewBinding.join.isEnabled = it.length>0
+            }
         }
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
     }
 
-    override fun onClick(p0: View?) {
-        when(p0?.id){
-            R.id.join ->{
-                Intent(this,VoiceActivity::class.java).let {
-                    it.putExtra("channelId",viewBinding?.input?.text.toString())
-                    startActivity(it)
-                }
-            }
-        }
-    }
 }

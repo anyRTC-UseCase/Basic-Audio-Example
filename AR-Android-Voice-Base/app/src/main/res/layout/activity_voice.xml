@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle"
+        android:id="@+id/rv_list"
         android:layout_marginTop="@dimen/dp_10"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,7 +20,7 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/mic"
+            android:id="@+id/btn_mute"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -31,7 +31,7 @@
             android:background="@null"/>
 
         <Button
-            android:id="@+id/leave"
+            android:id="@+id/btn_leave"
             android:layout_width="@dimen/dp_0_1"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -44,7 +44,7 @@
             android:background="@null"/>
 
         <Button
-            android:id="@+id/voice"
+            android:id="@+id/btn_speaker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -12,52 +12,36 @@ import org.ar.rtc.Constants
 import org.ar.rtc.IRtcEngineEventHandler
 import org.ar.rtc.RtcEngine
 
-class VoiceActivity: AppCompatActivity() ,View.OnClickListener{
+class VoiceActivity: AppCompatActivity() {
 
     private val TAG = VoiceActivity::class.java.simpleName
-    private var viewBinding: ActivityVoiceBinding? = null
+    private val viewBinding by lazy { ActivityVoiceBinding.inflate(layoutInflater) }
     private var channelId:String =""
     private var mRtcEngine : RtcEngine? =null
-    private var linearLayoutManager: LinearLayoutManager= LinearLayoutManager(this)
     private val infoAdapter = InfoAdapter()
-    private var isMic:Boolean=false
-    private var isVoice:Boolean=false
+    private val userId  =((Math.random()*9+1)*100000L).toInt().toString()
 
     private inner class mRtcEvent : IRtcEngineEventHandler() {
         override fun onJoinChannelSuccess(channel: String?, uid: String?, elapsed: Int) {
             super.onJoinChannelSuccess(channel, uid, elapsed)
             runOnUiThread{
-                infoAdapter.addData(InfoBean(uid!!,true))
+                infoAdapter.addData(Member("自己"+uid!!))
             }
         }
 
         override fun onUserJoined(uid: String?, elapsed: Int) {
             super.onUserJoined(uid, elapsed)
             runOnUiThread {
-                infoAdapter.addData(InfoBean(uid!!,false))
+                infoAdapter.addData(Member(uid!!,false))
             }
         }
 
         override fun onRtcStats(stats: RtcStats?) {
             super.onRtcStats(stats)
-            runOnUiThread{
-                val txaudio = infoAdapter.getViewByPosition(0,R.id.txaudio) as? TextView
-                val rxaudio = infoAdapter.getViewByPosition(0,R.id.rxaudio) as? TextView
-                txaudio?.setText("${stats?.txAudioKBitRate}Kb/s")
-                rxaudio?.setText("${stats?.rxAudioKBitRate}Kb/s")
-            }
         }
 
         override fun onRemoteAudioStats(stats: RemoteAudioStats?) {
             super.onRemoteAudioStats(stats)
-            runOnUiThread{
-                infoAdapter.data.forEachIndexed { index, infoBean ->
-                    if (infoBean.userId.equals(stats?.uid)){
-                        val rxaudio = infoAdapter.getViewByPosition(index,R.id.rxaudio) as? TextView
-                        rxaudio?.setText("${stats?.receivedBitrate}Kb/s")
-                    }
-                }
-            }
         }
 
         override fun onUserOffline(uid: String?, reason: Int) {
@@ -79,29 +63,44 @@ class VoiceActivity: AppCompatActivity() ,View.OnClickListener{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewBinding = ActivityVoiceBinding.inflate(LayoutInflater.from(this))
-        setContentView(viewBinding?.root)
+        setContentView(viewBinding.root)
         channelId = intent.getStringExtra("channelId").toString()
-        linearLayoutManager.orientation =LinearLayoutManager.VERTICAL
-        viewBinding?.recycle?.layoutManager =linearLayoutManager
-        viewBinding?.recycle?.adapter = infoAdapter
-        viewBinding?.mic?.setOnClickListener(this)
-        viewBinding?.leave?.setOnClickListener(this)
-        viewBinding?.voice?.setOnClickListener(this)
+
+        viewBinding.run {
+            rvList.apply {
+                layoutManager = LinearLayoutManager(this@VoiceActivity)
+                adapter = infoAdapter
+            }
+            btnLeave.setOnClickListener {
+                mRtcEngine?.leaveChannel()
+                finish()
+            }
+            btnMute.setOnClickListener {
+                it.isSelected = ! it.isSelected
+                mRtcEngine?.muteLocalAudioStream(btnMute.isSelected)
+            }
+            btnSpeaker.setOnClickListener {
+                it.isSelected = ! it.isSelected
+                mRtcEngine?.setEnableSpeakerphone(btnSpeaker.isSelected)
+            }
+
+        }
         joinChannel()
+
     }
 
     private fun joinChannel() {
         mRtcEngine = RtcEngine.create(this,getString(R.string.ar_appid),mRtcEvent())
-        mRtcEngine?.enableAudio()
-        mRtcEngine?.setChannelProfile(Constants.CHANNEL_PROFILE_COMMUNICATION)
-        mRtcEngine?.setEnableSpeakerphone(true)
-        mRtcEngine?.joinChannel(getString(R.string.ar_token),channelId,"",VoiceApp.voiceApp.userId)
+        mRtcEngine?.let {
+            it.joinChannel(getString(R.string.ar_token),channelId,"",userId)
+            it.setEnableSpeakerphone(true)
+            viewBinding.btnSpeaker.isSelected = true
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK){
-            release()
+            mRtcEngine?.leaveChannel()
             finish()
             return true
         }
@@ -109,33 +108,9 @@ class VoiceActivity: AppCompatActivity() ,View.OnClickListener{
     }
 
 
-    override fun onClick(p0: View?) {
-        when(p0?.id){
-            R.id.mic->{
-                isMic =!isMic
-                viewBinding?.mic?.isSelected= isMic
-                mRtcEngine?.muteLocalAudioStream(isMic)
-            }
-            R.id.leave->{
-                release()
-                finish()
-            }
-            R.id.voice->{
-                isVoice =!isVoice
-                viewBinding?.voice?.isSelected =isVoice
-                mRtcEngine?.setEnableSpeakerphone(!isVoice)
-            }
-        }
-    }
-
-    private fun release(){
-        mRtcEngine?.leaveChannel()
-        RtcEngine.destroy()
-        mRtcEngine=null
-    }
 
     override fun onDestroy() {
         super.onDestroy()
-        release()
+        RtcEngine.destroy()
     }
 }
